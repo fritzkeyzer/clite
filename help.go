@@ -20,7 +20,7 @@ func checkForHelp() bool {
 	return false
 }
 
-func (c *Cmd) PrintHelp() {
+func (c *Cmd) printHelp() {
 	fmt.Println(c.Name)
 	if c.Description != "" {
 		fmt.Println(c.Description)
@@ -31,9 +31,9 @@ func (c *Cmd) PrintHelp() {
 	fmt.Println(" ", c.fullpath, "<command> [flags]")
 	fmt.Println()
 
-	fmt.Println("Params:")
+	fmt.Println("Flags:")
 	// fmt.Println("  --help  -h  Prints help for the command")
-	fmt.Println(getParamsHelp(c.Params))
+	fmt.Println(getParamsHelp(c.Flags))
 
 	if len(c.SubCmds) > 0 {
 
@@ -67,9 +67,9 @@ func getParamsHelp(ptr any) string {
 	}
 
 	for _, field := range fields {
-		flagName, flag := field.FlagName()
+		flagName, flag := field.flagName()
 
-		envVar, env := field.EnvVar()
+		envVar, env := field.envVar()
 		if env {
 			envVar = "$" + envVar
 		}

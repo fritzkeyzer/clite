@@ -7,4 +7,8 @@ require (
 	github.com/olekukonko/tablewriter v0.0.5
 )
 
-require github.com/mattn/go-runewidth v0.0.9 // indirect
+require (
+	github.com/campoy/embedmd v1.0.0 // indirect
+	github.com/mattn/go-runewidth v0.0.9 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+)

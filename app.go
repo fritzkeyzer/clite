@@ -20,7 +20,7 @@ func (a *App) Run() {
 	}
 
 	if len(os.Args) == 1 {
-		cmd.PrintHelp()
+		cmd.printHelp()
 		return
 	}
 

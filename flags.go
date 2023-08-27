@@ -60,8 +60,8 @@ func flattenFields(v reflect.Value, path []string) []Field {
 		fields = append(fields, f)
 
 		// do not recurse into fields that have the env, flag or secret tags
-		_, env := f.EnvVar()
-		_, flag := f.FlagName()
+		_, env := f.envVar()
+		_, flag := f.flagName()
 		if env || flag {
 			continue
 		}
@@ -75,8 +75,8 @@ func flattenFields(v reflect.Value, path []string) []Field {
 	return fields
 }
 
-// EnvVar returns the `env` tag value and a bool indicating if the field has the `env` tag.
-func (f *Field) EnvVar() (string, bool) {
+// envVar returns the `env` tag value and a bool indicating if the field has the `env` tag.
+func (f *Field) envVar() (string, bool) {
 	envVar := f.field.Tag.Get(envTag)
 	if envVar != "" {
 		return envVar, true
@@ -85,8 +85,8 @@ func (f *Field) EnvVar() (string, bool) {
 	return "", false
 }
 
-// FlagName returns the `flag` tag value and a bool indicating if the field has the `flag` tag.
-func (f *Field) FlagName() (string, bool) {
+// flagName returns the `flag` tag value and a bool indicating if the field has the `flag` tag.
+func (f *Field) flagName() (string, bool) {
 	flagName := f.field.Tag.Get(flagTag)
 	if flagName != "" {
 		return flagName, true
