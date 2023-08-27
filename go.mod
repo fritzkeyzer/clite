@@ -1,6 +1,6 @@
 module github.com/fritzkeyzer/clite
 
-go 1.21
+go 1.18
 
 require (
 	github.com/fritzkeyzer/conf v1.0.5
