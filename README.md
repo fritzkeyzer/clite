@@ -13,10 +13,12 @@ go get github.com/fritzkeyzer/clite
 From example/example.go
 
 [embedmd]:# (example/example.go)
+
 ```go
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -48,7 +50,10 @@ func main() {
 		},
 	}
 
-	app.Run()
+	err := app.Run(context.Background())
+	if err != nil {
+		log.Fatal("ERROR:", err)
+	}
 
 }
 
@@ -80,7 +85,7 @@ var someCmd = clite.Cmd{
 	Name:        "some-cmd",
 	Description: "Does something interesting",
 	Flags:       &cmdFlags,
-	Func: func() error {
+	Func: func(ctx context.Context) error {
 		if cmdFlags.Verbose {
 			log.Println("verbose output")
 		}
@@ -100,7 +105,7 @@ var someCmd = clite.Cmd{
 var demoErrorCmd = clite.Cmd{
 	Name:        "demo-error",
 	Description: "Demonstrates how to return an error",
-	Func: func() error {
+	Func: func(ctx context.Context) error {
 		return fmt.Errorf("something went wrong")
 	},
 }

@@ -1,7 +1,7 @@
 package clite
 
 import (
-	"log"
+	"context"
 	"os"
 )
 
@@ -11,7 +11,7 @@ type App struct {
 	Cmds        []Cmd
 }
 
-func (a *App) Run() {
+func (a *App) Run(ctx context.Context) error {
 	cmd := Cmd{
 		Name:        a.Name,
 		Description: a.Description,
@@ -21,11 +21,8 @@ func (a *App) Run() {
 
 	if len(os.Args) == 1 {
 		cmd.printHelp()
-		return
+		return nil
 	}
 
-	err := cmd.Run(os.Args[1:])
-	if err != nil {
-		log.Fatalln("ERROR:", err)
-	}
+	return cmd.Run(ctx, os.Args[1:])
 }

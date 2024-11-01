@@ -1,6 +1,7 @@
 package clite
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/fritzkeyzer/conf"
@@ -24,12 +25,12 @@ type Cmd struct {
 	// 		Flags: &cmdFlags,
 	// 	}
 	Flags    any
-	Func     func() error // function to execute
+	Func     func(ctx context.Context) error // function to execute
 	SubCmds  []Cmd
 	fullpath string // populated at runtime to print the full path to the command
 }
 
-func (c *Cmd) Run(args []string) error {
+func (c *Cmd) Run(ctx context.Context, args []string) error {
 	if c.SubCmds == nil {
 		if checkForHelp() {
 			c.printHelp()
@@ -40,7 +41,7 @@ func (c *Cmd) Run(args []string) error {
 			return fmt.Errorf("no subcommands or Exec.Func defined")
 		}
 
-		return c.exec()
+		return c.exec(ctx)
 	}
 
 	if len(args) == 0 {
@@ -53,7 +54,7 @@ func (c *Cmd) Run(args []string) error {
 	for _, subCmd := range c.SubCmds {
 		if subCmd.Name == subCmdName || subCmd.Alias == subCmdName {
 			subCmd.fullpath = c.fullpath + " " + subCmdName
-			return subCmd.Run(args[1:])
+			return subCmd.Run(ctx, args[1:])
 		}
 	}
 
@@ -66,7 +67,7 @@ func (c *Cmd) Run(args []string) error {
 	return fmt.Errorf("invalid command: %q", subCmdName)
 }
 
-func (c *Cmd) exec() error {
+func (c *Cmd) exec(ctx context.Context) error {
 	if c.Flags != nil {
 		if err := conf.LoadEnv(c.Flags); err != nil {
 			return fmt.Errorf("loading env: %v", err)
@@ -77,7 +78,7 @@ func (c *Cmd) exec() error {
 		}
 	}
 
-	if err := c.Func(); err != nil {
+	if err := c.Func(ctx); err != nil {
 		return err
 	}
 
